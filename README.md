@@ -17,7 +17,7 @@ self.menuBarController = [[MenuBarController alloc] initWithImage:image menu:men
 
 3\. Fill block with needed behaviour. Use active variable to detect if user clicks the left mouse button (active == YES), or clicked the right (active == NO).
 
-4\. Use the mode boolean to switch between displaying the menu right or left. (mode == YES) will make the menu display on left right click and (mode == NO) on left click. When switching the behavior while running use:
+4\. Use the mode boolean to switch between displaying the menu right or left. (mode == YES) will make the menu display on right click and (mode == NO) on left click. When switching the behavior while running use:
 
 ```objective-c
 [self.menuBarController setRevert: mode];
