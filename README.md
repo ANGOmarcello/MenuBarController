@@ -29,10 +29,6 @@ This can be usefull because performing an action on left click and displaying a 
 
 Since OS X 10.10 Apple introduces some changes to `NSStatusItem` API, so most of the api is absolete. You should use button member in `NSStatusItem` and set up template image on it, so it could be represented right according to current system preferences (dark menu bar mode etc.). More about changes in 10.10 you can find on [StackOverflow thread][1] and [Developer Forum][2].
 
-### Few things to know
-
-Current implementation uses OS X 10.10 features, and will be adopted for older releases (up to 10.6) soon.
-
 [1]: http://stackoverflow.com/questions/24623559/nsstatusitem-change-image-for-dark-tint
 [2]: https://devforums.apple.com/thread/234839?start=25&tstart=0
 
