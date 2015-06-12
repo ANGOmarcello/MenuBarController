@@ -11,11 +11,19 @@ By default you can set up your own behaviour on menu bar OR use standart menu. T
 2\. Set up `MenuBarController` instance with image, menu and click handler:
 
 ```objective-c
-self.menuBarController = [[MenuBarController alloc] initWithImage:image menu:menu handler:^(BOOL active) {
+self.menuBarController = [[MenuBarController alloc] initWithImage:image menu:menu revert:mode handler:^(BOOL active) {
 }];
 ```
 
 3\. Fill block with needed behaviour. Use active variable to detect if user clicks the left mouse button (active == YES), or clicked the right (active == NO).
+
+4\. Use the mode boolean to switch between displaying the menu right or left. (mode == YES) will make the menu display on left right click and (mode == NO) on left click. When switching the behavior while running use:
+
+```objective-c
+[self.menuBarController setRevert: mode];
+```
+
+This can be usefull because performing an action on left click and displaying a menu on right click per default is not allowed in the appstore.
 
 ### Why to use this framework
 
