@@ -29,19 +29,46 @@
     NSImage *image = [NSImage imageNamed:NSImageNameAddTemplate];
     
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"Menu"];
-    NSMenuItem *item = [menu addItemWithTitle:NSLocalizedString(@"Quit",@"") action:nil keyEquivalent:@""];
-    item.target = self;
-    item.action = @selector(quit:);
+    NSMenuItem *itemOne = [menu addItemWithTitle:NSLocalizedString(@"Quit",@"") action:nil keyEquivalent:@""];
+    itemOne.target = self;
+    itemOne.action = @selector(quit:);
     
+    NSMenuItem *itemTwo = [menu addItemWithTitle:NSLocalizedString(@"Revert",@"") action:nil keyEquivalent:@""];
+    itemTwo.target = self;
+    itemTwo.action = @selector (revertMethod);
+    
+    // Could be set in an option to switch right and left click behavior makes it easier to get accepted in appstore
+    revertBool = true;
     
     __weak AppDelegate *weakSelf = self;
-    self.menuBarController = [[MenuBarController alloc] initWithImage:image menu:menu handler:^(BOOL active) {
-        if (active) {
-            [weakSelf.popover showRelativeToRect:NSZeroRect ofView:[weakSelf.menuBarController statusItemView] preferredEdge:CGRectMinYEdge];
+    self.menuBarController = [[MenuBarController alloc] initWithImage:image menu:menu revert:revertBool handler:^(BOOL active) {
+        
+        NSLog(@"Test");
+        if (active){
+            if (revertBool) {
+                [weakSelf.popover showRelativeToRect:NSZeroRect ofView:[weakSelf.menuBarController statusItemView] preferredEdge:CGRectMinYEdge];
+            } else {
+                [weakSelf.popover close];
+            }
+            
         } else {
-            [weakSelf.popover close];
+            if (revertBool) {
+                [weakSelf.popover close];
+            } else {
+                [weakSelf.popover showRelativeToRect:NSZeroRect ofView:[weakSelf.menuBarController statusItemView] preferredEdge:CGRectMinYEdge];
+            }
         }
     }];
+}
+
+- (void) revertMethod {
+    if (revertBool) {
+        revertBool = false;
+        [self.menuBarController setRevert: revertBool];
+    } else {
+        revertBool = true;
+        [self.menuBarController setRevert: revertBool];
+    }
 }
 
 - (void) createPopover {

@@ -17,11 +17,12 @@
 
 @implementation MenuBarController
 
-- (instancetype) initWithImage: (NSImage *) image menu: (NSMenu *) menu handler: (MenuBarControllerActionBlock) handler
+- (instancetype) initWithImage: (NSImage *) image menu: (NSMenu *) menu revert: (BOOL) mode handler: (MenuBarControllerActionBlock) handler
 {
     self = [super init];
     if (self) {
         
+        self.mode = mode;
         self.image = image;
         self.menu = menu;
         self.handler = handler;
@@ -36,6 +37,10 @@
         
     }
     return self;
+}
+
+- (void) setRevert:(BOOL) revert {
+    self.mode = revert;
 }
 
 - (void) setImage: (NSImage *) image {
@@ -74,12 +79,27 @@
      (NSRightMouseDownMask | NSAlternateKeyMask | NSLeftMouseDownMask) handler:^(NSEvent *incomingEvent) {
          
          if (incomingEvent.type == NSLeftMouseDown) {
-             weakSelf.statusItem.menu = nil;
+             if (self.mode) {
+                 self.statusItem.highlightMode = NO;
+                 weakSelf.statusItem.menu = nil;
+             } else {
+                 self.statusItem.highlightMode = YES;
+                 //weakSelf.handler(NO);
+                 weakSelf.statusItem.menu = weakSelf.menu;
+             }
          }
          
-         if (incomingEvent.type == NSRightMouseDown || [incomingEvent modifierFlags] & NSAlternateKeyMask || [incomingEvent modifierFlags] & NSCommandKeyMask || [incomingEvent modifierFlags] & NSControlKeyMask) {
+         if (incomingEvent.type == NSRightMouseDown || [incomingEvent modifierFlags] & NSAlternateKeyMask || [incomingEvent modifierFlags] & NSControlKeyMask || [incomingEvent modifierFlags] & NSCommandKeyMask) {
+             if (self.mode) {
+                 self.statusItem.highlightMode = YES;
+                 
+                 weakSelf.statusItem.menu = weakSelf.menu;
+             } else {
+                 self.statusItem.highlightMode = NO;
+                 weakSelf.statusItem.menu = nil;
+             }
+             
              weakSelf.handler(NO);
-             weakSelf.statusItem.menu = weakSelf.menu;
          }
          
          return incomingEvent;
@@ -100,12 +120,21 @@
 }
 
 - (void) statusItemButtonLeftClick: (StatusItemButton *) button {
-    self.handler(YES);
+    if (self.mode) {
+        self.handler(NO);
+        [self.statusItem popUpStatusItemMenu:self.menu];
+    } else {
+        self.handler(YES);
+    }
 }
 
 - (void) statusItemButtonRightClick: (StatusItemButton *) button {
-    self.handler(NO);
-    [self.statusItem popUpStatusItemMenu:self.menu];
+    if (self.mode) {
+        self.handler(YES);
+    } else {
+        self.handler(NO);
+        [self.statusItem popUpStatusItemMenu:self.menu];
+    }
 }
 
 #pragma mark - Private

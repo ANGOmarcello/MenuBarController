@@ -18,16 +18,20 @@ FOUNDATION_EXPORT const unsigned char MenuBarControllerVersionString[];
 
 typedef void(^MenuBarControllerActionBlock)(BOOL active);
 
-@interface MenuBarController : NSObject
+@interface MenuBarController : NSObject {
+    BOOL mode;
+}
 
-- (instancetype) initWithImage: (NSImage *) image menu: (NSMenu *) menu handler: (MenuBarControllerActionBlock) handler;
+- (instancetype) initWithImage: (NSImage *) image menu: (NSMenu *) menu revert: (BOOL) mode handler: (MenuBarControllerActionBlock) handler;
+
+- (void) setRevert: (BOOL) mode;
 
 @property (strong) NSMenu *menu;
 @property (copy) MenuBarControllerActionBlock handler;
 @property (strong, nonatomic) NSImage *image;
+@property () BOOL mode;
 
 - (NSView *) statusItemView;
 
 @end
-
 
