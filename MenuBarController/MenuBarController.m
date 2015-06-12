@@ -39,7 +39,14 @@
 }
 
 - (void) setImage: (NSImage *) image {
-    [self.statusItem setImage:(image)];
+    _image = image;
+    
+    if ([self isYosemite]) {
+        self.statusItem.button.image = image;
+    } else {
+        StatusItemButton *button = (StatusItemButton *)self.statusItem.view;
+        button.image = image;
+    }
 }
 
 - (NSView *) statusItemView {
@@ -56,26 +63,26 @@
 
 - (void) initStatusItem10 {
     
-     self.statusItem.button.image = self.image;
-     self.statusItem.button.appearsDisabled = NO;
-     self.statusItem.button.target = self;
-     self.statusItem.button.action = @selector(leftClick10:);
-     
-     __unsafe_unretained MenuBarController *weakSelf = self;
-     
-     [NSEvent addLocalMonitorForEventsMatchingMask:
+    self.statusItem.button.image = self.image;
+    self.statusItem.button.appearsDisabled = NO;
+    self.statusItem.button.target = self;
+    self.statusItem.button.action = @selector(leftClick10:);
+    
+    __unsafe_unretained MenuBarController *weakSelf = self;
+    
+    [NSEvent addLocalMonitorForEventsMatchingMask:
      (NSRightMouseDownMask | NSAlternateKeyMask | NSLeftMouseDownMask) handler:^(NSEvent *incomingEvent) {
-     
-     if (incomingEvent.type == NSLeftMouseDown) {
-     weakSelf.statusItem.menu = nil;
-     }
-     
-     if (incomingEvent.type == NSRightMouseDown || [incomingEvent modifierFlags] & NSAlternateKeyMask) {
-     weakSelf.handler(NO);
-     weakSelf.statusItem.menu = weakSelf.menu;
-     }
-     
-     return incomingEvent;
+         
+         if (incomingEvent.type == NSLeftMouseDown) {
+             weakSelf.statusItem.menu = nil;
+         }
+         
+         if (incomingEvent.type == NSRightMouseDown || [incomingEvent modifierFlags] & NSAlternateKeyMask || [incomingEvent modifierFlags] & NSCommandKeyMask || [incomingEvent modifierFlags] & NSControlKeyMask) {
+             weakSelf.handler(NO);
+             weakSelf.statusItem.menu = weakSelf.menu;
+         }
+         
+         return incomingEvent;
      }];
 }
 

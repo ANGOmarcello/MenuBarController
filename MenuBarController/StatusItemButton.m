@@ -18,6 +18,11 @@
     return self;
 }
 
+- (void) setImage:(NSImage *)image {
+    _image = image;
+    [self setNeedsDisplay:YES];
+}
+
 - (void) drawRect: (NSRect) dirtyRect {
     NSSize imageSize = self.image.size;
     CGFloat x = (self.bounds.size.width - imageSize.width)/2;
